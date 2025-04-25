@@ -39,6 +39,10 @@
                         </a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="{{ url_for('emergency.patient_list') }}">Patient List</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{{ url_for('laboratory.pending_results') }}">
+                                <i class="fas fa-cloud-download-alt me-1"></i> External Lab Results
+                            </a></li>
                         </ul>
                     </li>
                     <li class="nav-item">

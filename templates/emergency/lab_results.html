@@ -105,15 +105,38 @@
                         </div>
                         
                         <div class="row mb-3">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <p class="mb-1"><strong>Result Added By:</strong></p>
                                 <p>{{ lab_request.result_added_by }}</p>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <p class="mb-1"><strong>Completed At:</strong></p>
                                 <p>{{ lab_request.completed_at.strftime('%d-%m-%Y %H:%M') }}</p>
                             </div>
+                            <div class="col-md-4">
+                                <p class="mb-1"><strong>Source:</strong></p>
+                                <p>
+                                    {% if lab_request.is_auto_imported %}
+                                        <span class="badge bg-info">
+                                            <i class="fas fa-cloud-download-alt me-1"></i> Auto-imported
+                                        </span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">
+                                            <i class="fas fa-keyboard me-1"></i> Manual Entry
+                                        </span>
+                                    {% endif %}
+                                </p>
+                            </div>
                         </div>
+                        
+                        {% if lab_request.is_auto_imported and lab_request.external_system_id %}
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i>
+                            This result was automatically imported from an external laboratory system.
+                            <br>
+                            <strong>External Reference ID:</strong> {{ lab_request.external_system_id }}
+                        </div>
+                        {% endif %}
                     </div>
                 {% else %}
                     <form method="POST" action="{{ url_for('emergency.lab_results', request_id=lab_request.id) }}">

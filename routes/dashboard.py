@@ -103,6 +103,9 @@ def dashboard():
         func.count(DoctorExamination.id).desc()
     ).limit(10).all()
     
+    # Calculate total patients
+    total_patients_today = sum(patients_per_hour_complete)
+    
     return render_template('dashboard/index.html',
                           hours_labels=list(range(24)),
                           hours_data=patients_per_hour_complete,
@@ -113,4 +116,5 @@ def dashboard():
                           triage_colors=triage_colors_list,
                           nurses=nurses,
                           doctors=doctors,
-                          today=today)
+                          today=today,
+                          total_patients_today=total_patients_today)

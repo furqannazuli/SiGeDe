@@ -2,6 +2,10 @@
 
 {% block title %}Inpatient Transfer - SiGeDe EMR{% endblock %}
 
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/bed_selector.js') }}"></script>
+{% endblock %}
+
 {% block content %}
 <div class="row">
     <div class="col-12">

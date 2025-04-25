@@ -41,11 +41,13 @@ from routes.auth import auth_bp
 from routes.admin import admin_bp
 from routes.emergency import emergency_bp
 from routes.transfer import transfer_bp
+from routes.dashboard import dashboard_bp
 
 app.register_blueprint(auth_bp)
 app.register_blueprint(admin_bp)
 app.register_blueprint(emergency_bp)
 app.register_blueprint(transfer_bp)
+app.register_blueprint(dashboard_bp)
 
 with app.app_context():
     # Import models here to ensure they're registered with SQLAlchemy

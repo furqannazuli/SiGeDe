@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_required, current_user
 from app import db
-from models import Patient, Triage, NurseAssessment, DoctorExamination, LabRequest, Prescription
+from models import Patient, Triage, NurseAssessment, DoctorExamination, LabRequest, Prescription, ExternalLabResult
 from datetime import datetime
 import json
 
@@ -183,6 +183,14 @@ def lab_request(patient_id):
     # Get existing lab requests
     existing_requests = LabRequest.query.filter_by(patient_id=patient_id).all()
     
+    # Check if there are pending external lab results for this patient
+    pending_external_results = None
+    if patient.medical_record_number:
+        pending_external_results = ExternalLabResult.query.filter_by(
+            patient_mrn=patient.medical_record_number,
+            is_imported=False
+        ).all()
+    
     if request.method == 'POST':
         try:
             # Create new lab request
@@ -198,7 +206,34 @@ def lab_request(patient_id):
             db.session.add(lab_request)
             db.session.commit()
             
-            flash('Lab request saved successfully!', 'success')
+            # Check if we can auto-match with any pending external results
+            if patient.medical_record_number and lab_request.test_type and lab_request.test_name:
+                matching_external = ExternalLabResult.query.filter_by(
+                    patient_mrn=patient.medical_record_number,
+                    test_type=lab_request.test_type,
+                    test_name=lab_request.test_name,
+                    is_imported=False
+                ).first()
+                
+                if matching_external:
+                    # Auto-import the matching result
+                    lab_request.result = matching_external.result
+                    lab_request.is_completed = True
+                    lab_request.completed_at = datetime.utcnow()
+                    lab_request.result_added_by = "Auto-import"
+                    lab_request.is_auto_imported = True
+                    lab_request.external_system_id = matching_external.external_system_id
+                    
+                    # Mark the external result as imported
+                    matching_external.is_imported = True
+                    matching_external.lab_request_id = lab_request.id
+                    
+                    db.session.commit()
+                    flash('Lab request created and result automatically imported from external system!', 'success')
+                else:
+                    flash('Lab request saved successfully!', 'success')
+            else:
+                flash('Lab request saved successfully!', 'success')
             
             # Redirect to the same page to allow adding more lab requests
             return redirect(url_for('emergency.lab_request', patient_id=patient_id))
@@ -207,7 +242,10 @@ def lab_request(patient_id):
             db.session.rollback()
             flash(f'Error saving lab request: {str(e)}', 'danger')
     
-    return render_template('emergency/lab_request.html', patient=patient, lab_requests=existing_requests)
+    return render_template('emergency/lab_request.html', 
+                          patient=patient, 
+                          lab_requests=existing_requests,
+                          pending_external_results=pending_external_results)
 
 @emergency_bp.route('/lab-results/<int:request_id>', methods=['GET', 'POST'])
 @login_required

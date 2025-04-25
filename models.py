@@ -103,6 +103,10 @@ class LabRequest(db.Model):
     result = db.Column(db.Text, nullable=True)
     result_added_by = db.Column(db.String(100), nullable=True)
     completed_at = db.Column(db.DateTime, nullable=True)
+    
+    # For automatic integration
+    external_system_id = db.Column(db.String(100), nullable=True)
+    is_auto_imported = db.Column(db.Boolean, default=False)
 
 class Prescription(db.Model):
     """Medication prescription model"""
@@ -150,3 +154,15 @@ class Disposition(db.Model):
     notes = db.Column(db.Text, nullable=True)
     is_completed = db.Column(db.Boolean, default=False)
     completed_at = db.Column(db.DateTime, nullable=True)
+
+class ExternalLabResult(db.Model):
+    """Model for storing external lab system results for automatic integration"""
+    id = db.Column(db.Integer, primary_key=True)
+    external_system_id = db.Column(db.String(100), nullable=False, unique=True)
+    patient_mrn = db.Column(db.String(20), nullable=False)
+    test_type = db.Column(db.String(50), nullable=False)  # 'laboratory' or 'radiology'
+    test_name = db.Column(db.String(100), nullable=False)
+    result = db.Column(db.Text, nullable=False)
+    result_date = db.Column(db.DateTime, default=datetime.utcnow)
+    is_imported = db.Column(db.Boolean, default=False)
+    lab_request_id = db.Column(db.Integer, nullable=True)  # Will be filled when imported

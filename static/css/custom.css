@@ -35,6 +35,116 @@
     margin-right: 0.5rem;
 }
 
+/* Bed selection system */
+.bed-selection-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.bed-legend {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.bed-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.bed-icon {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    border: 1px solid var(--bs-gray-600);
+}
+
+.bed-icon.available {
+    background-color: var(--bs-dark);
+}
+
+.bed-icon.occupied {
+    background-color: var(--bs-danger);
+}
+
+.bed-icon.selected {
+    background-color: var(--bs-success);
+}
+
+.ward-layout {
+    margin-bottom: 1.5rem;
+}
+
+.bed-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.bed-row {
+    display: flex;
+    gap: 1rem;
+    justify-content: space-between;
+}
+
+.bed-cell {
+    flex: 1;
+    max-width: 100px;
+    aspect-ratio: 1 / 1;
+    padding: 0.5rem;
+    border-radius: 8px;
+    border: 2px solid var(--bs-gray-700);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.bed-cell.occupied {
+    border-color: var(--bs-danger);
+    background-color: rgba(220, 53, 69, 0.15);
+    cursor: not-allowed;
+}
+
+.bed-cell.available:hover {
+    border-color: var(--bs-primary);
+    background-color: rgba(13, 110, 253, 0.1);
+}
+
+.bed-cell.selected {
+    border-color: var(--bs-success);
+    background-color: rgba(40, 167, 69, 0.15);
+}
+
+.bed-icon {
+    width: 40px;
+    height: 20px;
+    background-color: var(--bs-gray-600);
+    border-radius: 8px 8px 0 0;
+    margin-bottom: 5px;
+}
+
+.bed-cell.occupied .bed-icon {
+    background-color: var(--bs-danger);
+}
+
+.bed-cell.selected .bed-icon {
+    background-color: var(--bs-success);
+}
+
+.bed-label {
+    font-size: 0.8rem;
+    font-weight: bold;
+    text-align: center;
+}
+
 /* Medical theme customizations */
 .medical-header {
     border-bottom: 2px solid var(--bs-primary);

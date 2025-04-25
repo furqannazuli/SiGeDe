@@ -66,8 +66,14 @@
                             <div class="col-md-6">
                                 <label for="bed_number" class="form-label">Bed Number</label>
                                 <input type="text" class="form-control" id="bed_number" name="bed_number" placeholder="e.g., B-203" value="{{ disposition.bed_number if disposition.bed_number else '' }}">
-                                <div class="form-text">If known; otherwise leave blank</div>
+                                <div class="form-text">Select a bed from the visualization below or enter manually</div>
                             </div>
+                        </div>
+                        
+                        <!-- Bed Selection Visualization -->
+                        <div id="bed-selection-container" class="form-section">
+                            <h4 class="section-title"><i class="fas fa-bed me-2"></i>Bed Selection Visualization</h4>
+                            <p class="mb-3">Select a ward above to view available beds and make a selection</p>
                         </div>
                         
                         <div class="row mb-3">

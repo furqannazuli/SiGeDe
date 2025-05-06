@@ -16,7 +16,9 @@ def create_app():
 
     # Import blueprint DI DALAM fungsi untuk hindari circular import
     from routes.auth import auth_bp
+    from routes.main import main_bp  # tambahkan ini
     app.register_blueprint(auth_bp)
+    app.register_blueprint(main_bp)  # dan ini
 
     return app
 
